@@ -1,0 +1,82 @@
+name: CloudSync-Actions
+
+on:
+  push:
+    branches:
+      - master
+  watch:
+    types: started
+    
+jobs:
+  run-it:
+    runs-on: ubuntu-latest
+    name: CloudSync-Actions
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Install rclone
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+
+      - name: Get rclone config from GitHub secret
+        env:
+          RCLONE_CONFIG: ${{ secrets.RCLONE_CONFIG }}
+        run: echo "$RCLONE_CONFIG" > rclone.conf
+
+      - name: Write rclone config to file
+        run: |
+          mkdir -p ~/.config/rclone
+          mv rclone.conf ~/.config/rclone/rclone.conf
+
+      - name: Rclone-Run
+        run: |
+          # Rclone-Run
+          # 延迟函数
+          delay()
+          {
+          random_time=$(($RANDOM % $1))
+          echo "等待 ${random_time} 分钟后开始同步"
+          for((i=1;i<=${random_time};i++));  
+          do
+          echo "倒计时 $[${random_time}-$i] 分钟"
+          sleep 1m
+          done
+          }
+          # 随机延迟0~15分钟后再进行操作,可自行设置时间
+          delay 1
+          
+          # 更改时区
+          sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+          
+          rclone sync -v weking_dropbox: weking_edu:Dropbox
+          echo "Dropbox文件已备份到Google盘"
+          
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.007.0109.0004" -v weking_doc: weking_edu:OneDrive
+          echo "weking_doc文件已备份到Google盘"
+          
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.007.0109.0004" -v weking_doc: weking_docbak:
+          echo "weking_doc文件已备份到OneDrive盘"
+          
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.007.0109.0004" -v weking_edu: weking_spare:/spare --drive-acknowledge-abuse
+          echo "weking_edu文件已备份到OneDrive备用盘"
+          
+          rclone sync -v weking_edu: weking_edubak: --drive-acknowledge-abuse
+          echo "weking_edu文件已备份到Google备用盘"
+          
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.007.0109.0004" -v weking_spare:iOS_Photo seafile:iPhone_Photo
+          echo "iPhone14PM照片已备份到Seafile"          
+          
+          rclone sync -v weking_spare:bitwarden_backup seafile:Bitwarden_Backup
+          echo "Bitwarden配置已备份到Seafile"
+          
+          rclone copy ~/.config/rclone weking_dropbox:PrivateDoc/rclone/CloudSync
+          echo "Rclone配置档备份完毕"
+
+      - name: Read rclone config file
+        run: |
+          RCLONE_CONFIG=$(cat ~/.config/rclone/rclone.conf)
+
+      - name: Set rclone config as GitHub secret
+        run: |
+          gh secret set RCLONE_CONFIG --repo myorg/myrepo --body "$RCLONE_CONFIG"
