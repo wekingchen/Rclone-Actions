@@ -21,7 +21,7 @@ jobs:
 
       - name: Read Rclone config from GitHub secret
         env:
-          RCLONE_CONFIG: ${{ secrets.RCLONE_CONFIG }}
+          RCLONE_CONFIG: ${{ secrets.CLOUDSYNC_RCLONE_CONFIG }}
         run: |
           mkdir -p ~/.config/rclone
           echo "$RCLONE_CONFIG" > ~/.config/rclone/rclone.conf
@@ -77,4 +77,4 @@ jobs:
         run: |
           RCLONE_CONFIG=$(cat ~/.config/rclone/rclone.conf)
           gh auth login --with-token <<< "${CLI_TOKEN}"
-          gh secret set RCLONE_CONFIG -b"${RCLONE_CONFIG}" --repo "${REPO}"
+          gh secret set CLOUDSYNC_RCLONE_CONFIG -b"${RCLONE_CONFIG}" --repo "${REPO}"
