@@ -79,4 +79,4 @@ jobs:
 
       - name: Set rclone config as GitHub secret
         run: |
-          gh secret set RCLONE_CONFIG --repo myorg/myrepo --body "$RCLONE_CONFIG"
+          gh secret set RCLONE_CONFIG --repo wekingchen/Rclone-Actions-new --body "$RCLONE_CONFIG"
