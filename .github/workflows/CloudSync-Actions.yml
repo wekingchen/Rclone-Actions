@@ -19,15 +19,12 @@ jobs:
         run: |
           curl https://rclone.org/install.sh | sudo bash
 
-      - name: Get rclone config from GitHub secret
+      - name: Read Rclone config from GitHub secret
         env:
           RCLONE_CONFIG: ${{ secrets.RCLONE_CONFIG }}
-        run: echo "$RCLONE_CONFIG" > rclone.conf
-
-      - name: Write rclone config to file
         run: |
           mkdir -p ~/.config/rclone
-          mv rclone.conf ~/.config/rclone/rclone.conf
+          echo "$RCLONE_CONFIG" > ~/.config/rclone/rclone.conf
           
       - name: Rclone-Run
         run: |
@@ -53,14 +50,11 @@ jobs:
           echo "Dropbox文件"
 
 
-      - name: Read rclone config file
-        run: |
-          RCLONE_CONFIG=$(cat ~/.config/rclone/rclone.conf)
-
-      - name: Set rclone config as GitHub secret
+      - name: Write Rclone config to GitHub secret
         env:
           CLI_TOKEN: ${{ secrets.CLI_TOKEN }}
+          REPO: wekingchen/Rclone-Actions-new
         run: |
-         echo ${CLI_TOKEN} > token
-         gh auth login --with-token < token
-         gh secret set RCLONE_CONFIG --repo wekingchen/Rclone-Actions-new --body "$RCLONE_CONFIG"
+          RCLONE_CONFIG=$(cat ~/.config/rclone/rclone.conf)
+          gh auth login --with-token <<< "${CLI_TOKEN}"
+          gh secret set RCLONE_CONFIG -b"${RCLONE_CONFIG}" --repo "${REPO}"
