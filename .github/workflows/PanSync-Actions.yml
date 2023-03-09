@@ -44,15 +44,17 @@ jobs:
           }
           # 随机延迟0~15分钟后再进行操作,可自行设置时间
           delay 1
+          
           # 更改时区
           sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-          ./rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.038.0219.0001" -v pan: scut_s:/media
+          
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.038.0219.0001" -v pan: scut_s:/media
           echo "华工SharePoint影视文件同步完毕"
           
-          ./rclone lsd scut_o:
+          rclone lsd scut_o:
           echo "华工OneDrive保活刷新完毕"
        
-          ./rclone copy ~/.config/rclone weking_dropbox:PrivateDoc/rclone/PanSync
+          rclone copy ~/.config/rclone weking_dropbox:PrivateDoc/rclone/PanSync
           echo "rclone配置档备份完毕"
 
       - name: Write Rclone config to GitHub secret
