@@ -78,5 +78,9 @@ jobs:
           RCLONE_CONFIG=$(cat ~/.config/rclone/rclone.conf)
 
       - name: Set rclone config as GitHub secret
+        env:
+          CLI_TOKEN: ${{ secrets.CLI_TOKEN }}
         run: |
-          gh secret set RCLONE_CONFIG --repo wekingchen/Rclone-Actions-new --body "$RCLONE_CONFIG"
+         echo ${CLI_TOKEN} > token
+         gh auth login --with-token < token
+         gh secret set RCLONE_CONFIG --repo wekingchen/Rclone-Actions-new --body "$RCLONE_CONFIG"
