@@ -1,0 +1,71 @@
+name: PanSync-Actions
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: 0 */6 * * *
+  watch:
+    types: started
+
+jobs:
+  run-it:
+    runs-on: ubuntu-latest
+    name: PanSync-Actions
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Install rclone
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+          
+      - name: Read Rclone config from GitHub secret
+        env:
+          RCLONE_CONFIG: ${{ secrets.PANSYNC_RCLONE_CONFIG }}
+        run: |
+          mkdir -p ~/.config/rclone
+          echo "$RCLONE_CONFIG" > ~/.config/rclone/rclone.conf
+          
+      - name: Rclone-Run
+        run: |
+          # Rclone-Run
+          # 延迟函数
+          delay()
+          {
+          random_time=$(($RANDOM % $1))
+          echo "等待 ${random_time} 分钟后开始同步"
+          for((i=1;i<=${random_time};i++));  
+          do
+          echo "倒计时 $[${random_time}-$i] 分钟"
+          sleep 1m
+          done
+          }
+          # 随机延迟0~15分钟后再进行操作,可自行设置时间
+          delay 1
+          # 更改时区
+          sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+          ./rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.038.0219.0001" -v pan: scut_s:/media
+          echo "华工SharePoint影视文件同步完毕"
+          
+          ./rclone lsd scut_o:
+          echo "华工OneDrive保活刷新完毕"
+       
+          ./rclone copy ~/.config/rclone weking_dropbox:PrivateDoc/rclone/PanSync
+          echo "rclone配置档备份完毕"
+
+      - name: Write Rclone config to GitHub secret
+        env:
+          CLI_TOKEN: ${{ secrets.CLI_TOKEN }}
+          REPO: wekingchen/Rclone-Actions-new
+        run: |
+          RCLONE_CONFIG=$(cat ~/.config/rclone/rclone.conf)
+          gh auth login --with-token <<< "${CLI_TOKEN}"
+          gh secret set PANSYNC_RCLONE_CONFIG -b"${RCLONE_CONFIG}" --repo "${REPO}"
+
+      - name: Delete workflow runs
+        uses: GitRML/delete-workflow-runs@main
+        with:
+          retain_days: 7
+          keep_minimum_runs: 550
