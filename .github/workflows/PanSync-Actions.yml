@@ -67,7 +67,7 @@ jobs:
           gh secret set PANSYNC_RCLONE_CONFIG -b"${RCLONE_CONFIG}" --repo "${REPO}"
 
       - name: Delete workflow runs
-        uses: GitRML/delete-workflow-runs@main
+        uses: wekingchen/delete-workflow-runs@main
         with:
           retain_days: 7
           keep_minimum_runs: 550
