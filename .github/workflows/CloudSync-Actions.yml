@@ -60,8 +60,8 @@ jobs:
           rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.071.0402.0001" -v weking_edu: weking_spare:/spare
           echo "weking_edu文件已备份到OneDrive备用盘"
           
-          rclone sync -v weking_edu: weking_edubak: --drive-acknowledge-abuse
-          echo "weking_edu文件已备份到Google备用盘"
+          #rclone sync -v weking_edu: weking_edubak: --drive-acknowledge-abuse
+          #echo "weking_edu文件已备份到Google备用盘"
           
           rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.071.0402.0001" -v weking_spare:iOS_Photo seafile:iPhone_Photo
           echo "iPhone14PM照片已备份到Seafile"          
