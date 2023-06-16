@@ -48,7 +48,7 @@ jobs:
           # 更改时区
           sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
           
-          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.038.0219.0001" -v pan: scut_s:/media
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.114.0530.0001" -v pan: scut_s:/media
           echo "华工SharePoint影视文件同步完毕"
           
           rclone lsd scut_o:
