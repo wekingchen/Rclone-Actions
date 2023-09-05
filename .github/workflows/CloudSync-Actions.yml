@@ -49,12 +49,12 @@ jobs:
           sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
           # 去重
-          rclone dedupe weking_dropbox:
-          rclone dedupe weking_edu:
-          rclone dedupe weking_doc:
-          rclone dedupe weking_docbak:
-          rclone dedupe weking_spare:
-          rclone dedupe seafile:
+          #rclone dedupe weking_dropbox:
+          #rclone dedupe weking_edu:
+          #rclone dedupe weking_doc:
+          #rclone dedupe weking_docbak:
+          #rclone dedupe weking_spare:
+          #rclone dedupe seafile:
           
           rclone sync -v weking_dropbox: weking_edu:Dropbox
           echo "Dropbox文件已备份到Google盘"
