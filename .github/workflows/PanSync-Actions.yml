@@ -48,14 +48,17 @@ jobs:
           # 更改时区
           sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
           
-          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.127.0618.0001" -v pan: scut_s:/media
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.246.1127.0002" -v pan: scut_s:/media
           echo "华工SharePoint影视文件同步完毕"
           
           rclone lsd scut_o:
           echo "华工OneDrive保活刷新完毕"
 
-          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.127.0618.0001" -v pan: chunker:
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.246.1127.0002" -v pan: chunker:
           echo "同济rclone聚合影视文件同步完毕"
+
+          rclone sync -v pan: pikpak:Video
+          echo "pikpak影视文件同步完毕"
 
           rclone copy ~/.config/rclone weking_dropbox:PrivateDoc/rclone/PanSync
           echo "rclone配置档备份完毕"
@@ -70,7 +73,7 @@ jobs:
           gh secret set PANSYNC_RCLONE_CONFIG -b"${RCLONE_CONFIG}" --repo "${REPO}"
 
       - name: Delete workflow runs
-        uses: GitRML/delete-workflow-runs@main
+        uses: wekingchen/delete-workflow-runs@main
         with:
           retain_days: 7
           keep_minimum_runs: 550
