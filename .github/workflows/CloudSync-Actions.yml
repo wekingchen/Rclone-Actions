@@ -59,19 +59,19 @@ jobs:
           rclone sync -v weking_dropbox: weking_edu:Dropbox
           echo "Dropbox文件已备份到Google盘"
           
-          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.246.1127.0002" -v weking_doc: weking_edu:OneDrive --drive-acknowledge-abuse
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/24.020.0128.0003" -v weking_doc: weking_edu:OneDrive --drive-acknowledge-abuse
           echo "weking_doc文件已备份到Google盘"
           
-          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.246.1127.0002" -v weking_doc: weking_docbak:
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/24.020.0128.0003" -v weking_doc: weking_docbak:
           echo "weking_doc文件已备份到OneDrive盘"
           
-          rclone sync --drive-acknowledge-abuse --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.169.0813.0001" -v weking_edu: weking_spare:/spare
-          echo "weking_edu文件已备份到OneDrive备用盘"
+          #rclone sync --drive-acknowledge-abuse --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/24.020.0128.0003" -v weking_edu: weking_spare:/spare
+          #echo "weking_edu文件已备份到OneDrive备用盘"
           
           #rclone sync -v weking_edu: weking_edubak: --drive-acknowledge-abuse
           #echo "weking_edu文件已备份到Google备用盘"
           
-          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.246.1127.0002" -v weking_spare:iOS_Photo seafile:iPhone_Photo
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/24.020.0128.0003" -v weking_spare:iOS_Photo seafile:iPhone_Photo
           echo "iPhone15PM照片已备份到Seafile"          
           
           rclone sync -v weking_spare:bitwarden_backup seafile:Bitwarden_Backup
