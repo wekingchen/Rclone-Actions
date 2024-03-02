@@ -1,13 +1,12 @@
 name: PanSync-Actions
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
   schedule:
     - cron: 0 */6 * * *
-  watch:
-    types: started
 
 jobs:
   run-it:
@@ -27,6 +26,17 @@ jobs:
         run: |
           mkdir -p ~/.config/rclone
           echo "$RCLONE_CONFIG" > ~/.config/rclone/rclone.conf
+
+      - name: Download alist directory
+        run: |
+          mkdir -p ~/alist
+          rclone copy weking_dropbox:PrivateDoc/rclone/PanSync/alist ~/alist
+          echo "已下载alist文件夹到本地~/alist"
+
+      - name: Run alist container
+        run: |
+          docker run -d --restart=unless-stopped -v ~/alist:/opt/alist/data -p 5244:5244 -e PUID=0 -e PGID=0 -e UMASK=022 --name="alist" xhofe/alist:latest
+          echo "alist容器已启动"
           
       - name: Rclone-Run
         run: |
@@ -57,11 +67,25 @@ jobs:
           rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/23.246.1127.0002" -v pan: chunker:
           echo "同济rclone聚合影视文件同步完毕"
 
+          rclone sync -v pan: quark:
+          echo "夸克网盘影视文件同步完毕"
+          
           rclone sync -v pan: pikpak:Video
           echo "pikpak影视文件同步完毕"
 
           rclone copy ~/.config/rclone weking_dropbox:PrivateDoc/rclone/PanSync
           echo "rclone配置档备份完毕"
+          
+      - name: Stop alist container
+        run: |
+          docker stop alist
+          docker rm alist
+          echo "alist容器已停止并删除"
+
+      - name: Upload alist directory back to Dropbox
+        run: |
+          rclone sync ~/alist weking_dropbox:PrivateDoc/rclone/PanSync/alist
+          echo "已将~/alist文件夹上传回Dropbox"
 
       - name: Write Rclone config to GitHub secret
         env:
