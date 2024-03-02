@@ -1,4 +1,4 @@
-name: PanSync-Actions
+name: New-Actions
 
 on:
   push:
