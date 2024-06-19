@@ -58,14 +58,11 @@ jobs:
           # 更改时区
           sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
           
-          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/24.055.0317.0002" -v pan: scut_s:/media
+          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/24.108.0528.0005" -v pan: scut_s:/media
           echo "华工SharePoint影视文件同步完毕"
           
           rclone lsd scut_o:
           echo "华工OneDrive保活刷新完毕"
-
-          rclone sync --user-agent "NONISV|Microsoft|Microsoft OneDrive for Windows/24.055.0317.0002" -v pan: chunker:
-          echo "同济rclone聚合影视文件同步完毕"
 
           rclone sync -v pan: pikpak:Video
           #rclone copy -v pikpak:"My Pack/巡回检察组.2020.EP01-43.HD1080P.X264.AAC.Mandarin.CHS.BDE4" pan:ping
